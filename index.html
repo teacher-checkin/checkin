@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Check-In</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .checkin-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    select, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+    button {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="checkin-box">
+    <h2>Teacher Check-In</h2>
+    <form id="checkin-form">
+      <select name="teacher_name" required>
+        <option value="">Select Teacher</option>
+        <option value="Jitu Khanikar">Jitu Khanikar</option>
+        <option value="Ratneswar Pathak">Ratneswar Pathak</option>
+        <option value="Kalpita Devi">Kalpita Devi</option>
+        <!-- Add all your teachers here -->
+      </select>
+
+      <select name="class_name" required>
+        <option value="">Select Class</option>
+        <option value="Class VI">Class VI</option>
+        <option value="Class VII">Class VII</option>
+        <option value="Class VIII">Class VIII</option>
+        <option value="Class IX">Class IX</option>
+        <option value="Class X">Class X</option>
+      </select>
+
+      <button type="submit">Check In</button>
+    </form>
+    <p id="status-msg"></p>
+  </div>
+
+  <script>
+    (function(){
+      emailjs.init("nR9IyXosWhTGAjieS"); // Replace with your actual EmailJS public key
+    })();
+
+    document.getElementById('checkin-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const teacher = this.teacher_name.value;
+      const className = this.class_name.value;
+      const timestamp = new Date().toLocaleString();
+
+      const params = {
+        teacher_name: teacher,
+        class_name: className,
+        timestamp: timestamp
+      };
+
+      emailjs.send('service_lpgxvmr', 'template_3vpcc9n', params)
+        .then(function(response) {
+          document.getElementById('status-msg').textContent = "Check-in successful. Email sent!";
+          document.getElementById('checkin-form').reset();
+        }, function(error) {
+          document.getElementById('status-msg').textContent = "Failed to send email. Try again.";
+          console.error(error);
+        });
+    });
+  </script>
+</body>
+</html>
